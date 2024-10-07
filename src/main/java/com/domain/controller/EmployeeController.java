@@ -10,10 +10,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+import com.domain.pojo.ApiResponse;
 import com.domain.pojo.Employee;
 import com.domain.service.EmployeeService;
 
+/**
+ * @author Nehal Mahajan
+ * @apiNote Employee Data transfer controller class
+ */
 @RestController
 @RequestMapping("/domain")
 public class EmployeeController {
@@ -21,30 +28,44 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService employeeService;
 
+//	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/employeeList")
-	public ResponseEntity<List<Employee>> employeeList() {
+	public ResponseEntity<ApiResponse<List<Employee>>> employeeList() {
 		return ResponseEntity.ok(employeeService.employeeList());
 	}
 
 	@GetMapping("/getEmployee")
-	public ResponseEntity<Employee> getEmployeeById(@RequestParam Integer employeeId) {
+	public ResponseEntity<ApiResponse<Employee>> getEmployeeById(@RequestParam Integer employeeId) {
 		return ResponseEntity.ok(employeeService.getEmployeeById(employeeId));
 	}
 
 	@PostMapping("/saveEmployee")
-	public String saveEmployee(@RequestBody Employee employee) {
-		employeeService.saveEmployee(employee);
-		return "Employee Save Successfuly";
+	public ResponseEntity<ApiResponse<String>> saveEmployee(@RequestBody Employee employee) {
+		return ResponseEntity.ok(employeeService.saveEmployee(employee));
 	}
-	
+
 	@GetMapping("/getCount")
-	public long getTotalEmployeeCount() {
-		return employeeService.getEmployeeCount();
+	public ResponseEntity<ApiResponse<Long>> getTotalEmployeeCount() {
+		return ResponseEntity.ok(employeeService.getEmployeeCount());
+	}
+
+	@GetMapping("/getActiveCount")
+	public ResponseEntity<ApiResponse<List<Employee>>> getActiveEmployeeList(@RequestParam boolean isActive) {
+		return ResponseEntity.ok(employeeService.getActiveEmployeeList(isActive));
+	}
+
+	@GetMapping("/searchEmployee")
+	public ResponseEntity<ApiResponse<List<Employee>>> searchByExample(
+			@RequestParam(required = false) Integer employeeId, @RequestParam(required = false) String employeeName,
+			@RequestParam(required = false) Boolean isActive) {
+		Employee employee = Employee.builder().employeeId(employeeId).employeeName(employeeName).isActive(isActive)
+				.build();
+		return ResponseEntity.ok(employeeService.searchByExample(employee));
 	}
 	
-	@GetMapping("/getActiveCount")
-	public ResponseEntity<List<Employee>> getActiveEmployeeList(@RequestParam boolean isActive) {
-		 return ResponseEntity.ok(employeeService.getActiveEmployeeList(isActive));
-	}
+    @GetMapping("/employeeListPagable")
+    public Page<Employee> getEmployeesPagable(Pageable pageable) {
+        return employeeService.getEmployees(pageable);
+    }
 
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.ToString;
 
 /**
  * @author Nehal Mahajan
- * @apiNote This is a EMployee Pojo class
+ * @apiNote Employee pojo class
  */
 @Data
 @NoArgsConstructor
@@ -22,15 +23,16 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
+@Builder
 @Table(name = "Employee")
 public class Employee {
 
 	@Id
 	@Column(name = "EMPLOYEE_ID")
-	private int employeeId;
+	private Integer employeeId;
 	@Column(name = "EMPLOYEE_NAME")
 	private String employeeName;
 	@Column(name = "ACTIVE")
-	private boolean isActive;
+	private Boolean isActive;
 
 }

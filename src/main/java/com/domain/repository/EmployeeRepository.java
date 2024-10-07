@@ -9,11 +9,9 @@ import com.domain.pojo.Employee;
 
 /**
  * @author Nehal Mahajan
- * @apiNote This is Employee Repository
+ * @apiNote Employee Repository Interface
  */
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-
 	public List<Employee> getEmployeeByIsActive(boolean isActive);
-
 }
