@@ -38,10 +38,8 @@ public class SecurityConfig {
 
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
-
 	@Autowired
 	private AuthenticationProvider authenticationProvider;
-
 	@Autowired
 	private JwtAuthenticationFilter authFilter;
 

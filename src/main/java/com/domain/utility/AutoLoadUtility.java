@@ -1,5 +1,7 @@
 package com.domain.utility;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,7 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.domain.pojo.Address;
+import com.domain.pojo.Department;
 import com.domain.pojo.Employee;
+import com.domain.pojo.Project;
 import com.domain.pojo.Role;
 import com.domain.pojo.User;
 import com.domain.repository.EmployeeRepository;
@@ -24,26 +29,63 @@ import com.domain.repository.UserRepository;
 @Component
 public class AutoLoadUtility {
 
-	@Autowired
 	private EmployeeRepository employeeRepository;
 
-	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+    public AutoLoadUtility(EmployeeRepository employeeRepository, UserRepository userRepository) {
+        this.employeeRepository = employeeRepository;
+        this.userRepository = userRepository;
+    }
 
 	private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
 	public void autoLoad() {
-		Employee employee = new Employee();
 
-		employee.setEmployeeId(1);
+		Department department1 = new Department();
+		department1.setDepartmentName("HR");
+		Department department2 = new Department();
+		department2.setDepartmentName("Finance");
+
+		Project project1 = new Project();
+		project1.setProjectUId("P001NX");
+		project1.setProjectName("RESOURCE FULLFILMENT");
+
+		Project project2 = new Project();
+		project2.setProjectUId("NGINX2187");
+		project2.setProjectName("BMW");
+
+		Project project3 = new Project();
+		project3.setProjectUId("NGI875B07");
+		project3.setProjectName("MASTERCARD");
+
+		Employee employee = new Employee();
+		Employee employee1 = new Employee();
+
 		employee.setEmployeeName("Nehal");
 		employee.setIsActive(true);
+		Address address = Address.builder().buildingNumber(201).area("Mahal").city("Nagpur").pincode(440032L)
+				.country("India").state("Maharashtra").build();
+		address.setBuildingNumber(201);
+		address.setArea("Mahal");
+		address.setCity("Nagpur");
+		address.setPincode(440032L);
+		address.setCountry("India");
+		address.setState("Maharashtra");
+		employee.setAddress(address);
+		employee.setDepartment(department1);
+		employee.setProject(Collections.singletonList(project1));
 		employeeRepository.save(employee);
 
-		employee.setEmployeeId(2);
-		employee.setEmployeeName("Swati");
-		employee.setIsActive(false);
-		employeeRepository.save(employee);
+		employee1.setEmployeeName("Swati");
+		employee1.setIsActive(false);
+		Address address1 = Address.builder().buildingNumber(301).area("Nandavan").city("Nagpur").pincode(430032L)
+				.country("India").state("Maharashtra").build();
+		employee1.setAddress(address1);
+		employee1.setDepartment(department2);
+		employee1.setProject(Arrays.asList(project2, project3));
+		employeeRepository.save(employee1);
 
 		User user1 = new User();
 		user1.setId(1L);

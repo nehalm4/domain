@@ -2,6 +2,8 @@ package com.domain.configuration;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,9 +36,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Autowired
 	private CustomUserDetailsService detailsService;
 
+	private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+		log.info("Initializing doFilterInternal():::");
 		final String authHeader = request.getHeader("Authorization");
 		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
 			filterChain.doFilter(request, response);
@@ -63,8 +68,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 			filterChain.doFilter(request, response);
 		} catch (Exception exception) {
-			exception.printStackTrace();
-//			handlerExceptionResolver.resolveException(request, response, null, exception);
+			log.error("Error in doFilterInternal()::: {}", exception.getMessage());
+			new RuntimeException(exception);
+//			exception.printStackTrace();
 		}
 	}
 

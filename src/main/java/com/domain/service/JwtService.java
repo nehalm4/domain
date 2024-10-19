@@ -3,7 +3,9 @@ package com.domain.service;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,17 @@ public class JwtService {
 
 	@Value("${security.jwt.expiration-time}")
 	private long jwtExpiration;
+	
+	
+	private Set<String> tokenBlacklist = new HashSet<>(); 
+
+    public void invalidateToken(String token) {
+        tokenBlacklist.add(token);
+    }
+
+    public boolean isTokenValid(String token) {
+        return !tokenBlacklist.contains(token);
+    }
 
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);

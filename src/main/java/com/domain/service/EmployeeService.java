@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.domain.dto.EmployeeProjectDTO;
 import com.domain.pojo.ApiResponse;
 import com.domain.pojo.Employee;
 import com.domain.repository.EmployeeRepository;
+import com.domain.utility.Constants;
 
 /**
  * @author Nehal Mahajan
@@ -20,40 +22,37 @@ import com.domain.repository.EmployeeRepository;
 @Service
 public class EmployeeService {
 
-	@Autowired
 	private EmployeeRepository employeeRepository;
 
+	@Autowired
+	public EmployeeService(EmployeeRepository employeeRepository) {
+		this.employeeRepository = employeeRepository;
+	}
+
 	public ApiResponse<List<Employee>> employeeList() {
-		ApiResponse<List<Employee>> response = new ApiResponse<>(200, "Success", employeeRepository.findAll());
-		return response;
+		return new ApiResponse<>(200, Constants.SUCCESS.toString(), employeeRepository.findAll());
 	}
 
 	public ApiResponse<Employee> getEmployeeById(Integer employeeId) {
-		ApiResponse<Employee> apiResponse = new ApiResponse<>(200, "Success",
-				employeeRepository.findById(employeeId).get());
-		return apiResponse;
+		return new ApiResponse<>(200, Constants.SUCCESS.toString(),
+				employeeRepository.findById(employeeId).orElse(null));
 	}
 
 	public ApiResponse<String> saveEmployee(Employee employee) {
 		try {
 			employeeRepository.save(employee);
-			ApiResponse<String> apiResponse = new ApiResponse<>(200, "Success", "Employee Save Successfuly");
-			return apiResponse;
+			return new ApiResponse<>(200, Constants.SUCCESS.toString(), "Employee Save Successfuly");
 		} catch (Exception e) {
-			ApiResponse<String> apiResponse = new ApiResponse<>(500, "Failed", "Something went wrong try again.");
-			return apiResponse;
+			return new ApiResponse<>(500, "Failed", "Something went wrong try again.");
 		}
 	}
 
 	public ApiResponse<Long> getEmployeeCount() {
-		ApiResponse<Long> apiResponse = new ApiResponse<>(200, "Success", employeeRepository.count());
-		return apiResponse;
+		return new ApiResponse<>(200, Constants.SUCCESS.toString(), employeeRepository.count());
 	}
 
 	public ApiResponse<List<Employee>> getActiveEmployeeList(boolean isActive) {
-		ApiResponse<List<Employee>> apiResponse = new ApiResponse<>(200, "Success",
-				employeeRepository.getEmployeeByIsActive(isActive));
-		return apiResponse;
+		return new ApiResponse<>(200, Constants.SUCCESS.toString(), employeeRepository.getEmployeeByIsActive(isActive));
 	}
 
 	public ApiResponse<List<Employee>> searchByExample(Employee employee) {
@@ -63,11 +62,15 @@ public class EmployeeService {
 		Example<Employee> emplExample = Example.of(employee, matcher);
 		List<Employee> employees = employeeRepository.findAll(emplExample);
 
-		return new ApiResponse<>(200, "Success", employees);
+		return new ApiResponse<>(200, Constants.SUCCESS.toString(), employees);
 	}
 
 	public Page<Employee> getEmployees(Pageable pageable) {
 		return employeeRepository.findAll(pageable);
+	}
+
+	public ApiResponse<List<EmployeeProjectDTO>> employeeDtoList() {
+		return new ApiResponse<>(200, Constants.SUCCESS.toString(), employeeRepository.findEmployeeProjectDetails());
 	}
 
 }

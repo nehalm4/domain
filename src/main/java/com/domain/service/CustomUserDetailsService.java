@@ -55,8 +55,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 				.authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		UserDetails authenticatedUser = loadUserByUsername(userDto.getUsername());
-		String jwtToken = jwtService.generateToken(authenticatedUser);
-		return jwtToken;
+		return jwtService.generateToken(authenticatedUser);
 	}
 
 	public ApiResponse<String> saveUser(SignUp signUp) {
