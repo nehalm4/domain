@@ -29,7 +29,7 @@ import com.domain.service.EmployeeService;
 public class EmployeeController {
 
 	private EmployeeService employeeService;
-	
+
 	private static final Logger log = LoggerFactory.getLogger(EmployeeController.class);
 
 	@Autowired
@@ -62,7 +62,7 @@ public class EmployeeController {
 		return ResponseEntity.ok(employeeService.getEmployeeCount());
 	}
 
-	@GetMapping("/getActiveCount")
+	@GetMapping("/getByActive")
 	public ResponseEntity<ApiResponse<List<Employee>>> getActiveEmployeeList(@RequestParam boolean isActive) {
 		log.info("Inside getActiveEmployeeList():::");
 		return ResponseEntity.ok(employeeService.getActiveEmployeeList(isActive));

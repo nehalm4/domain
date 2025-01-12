@@ -2,6 +2,8 @@ package com.domain.service;
 
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +30,8 @@ import com.domain.repository.UserRepository;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+	private static final Logger log = LoggerFactory.getLogger(CustomUserDetailsService.class);
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -42,6 +46,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		log.info("Inside loadUserByUsername():::");
 		User user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found....."));
 		Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
@@ -51,6 +56,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	}
 
 	public String authenticateUser(LoginUserDto userDto) throws UsernameNotFoundException {
+		log.info("Inside authenticateUser():::");
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -59,6 +65,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	}
 
 	public ApiResponse<String> saveUser(SignUp signUp) {
+		log.info("Inside saveUser():::");
 		if (userRepository.findByUsername(signUp.getUsername()).isPresent()) {
 			return ApiResponse.<String>builder().status(HttpStatus.CONFLICT.value()).message("Username Already Exists")
 					.data(null).timestamp(java.time.LocalDateTime.now().toString()).build();

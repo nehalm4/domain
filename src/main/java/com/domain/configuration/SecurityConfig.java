@@ -33,7 +33,7 @@ import com.domain.service.CustomUserDetailsService;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-	private static final String[] WHITE_LIST_URL = { "/h2-console/**", "/auth/**", "/v3/api-docs/**", "/swagger-ui/**",
+	private static final String[] WHITE_LIST_URL = { "/actuator/**","/h2-console/**", "/auth/**", "/v3/api-docs/**", "/swagger-ui/**",
 			"/swagger-ui.html" };
 
 	@Autowired

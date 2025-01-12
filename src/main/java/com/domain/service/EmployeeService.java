@@ -2,6 +2,8 @@ package com.domain.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -21,6 +23,8 @@ import com.domain.utility.Constants;
  */
 @Service
 public class EmployeeService {
+	
+	private static final Logger log = LoggerFactory.getLogger(EmployeeService.class);
 
 	private EmployeeRepository employeeRepository;
 
@@ -30,15 +34,18 @@ public class EmployeeService {
 	}
 
 	public ApiResponse<List<Employee>> employeeList() {
+		log.info("Inside employeeList():::");
 		return new ApiResponse<>(200, Constants.SUCCESS.toString(), employeeRepository.findAll());
 	}
 
 	public ApiResponse<Employee> getEmployeeById(Integer employeeId) {
+		log.info("Inside getEmployeeById():::");
 		return new ApiResponse<>(200, Constants.SUCCESS.toString(),
 				employeeRepository.findById(employeeId).orElse(null));
 	}
 
 	public ApiResponse<String> saveEmployee(Employee employee) {
+		log.info("Inside saveEmployee():::");
 		try {
 			employeeRepository.save(employee);
 			return new ApiResponse<>(200, Constants.SUCCESS.toString(), "Employee Save Successfuly");
@@ -48,6 +55,7 @@ public class EmployeeService {
 	}
 
 	public ApiResponse<Long> getEmployeeCount() {
+		log.info("Inside getEmployeeCount():::");
 		return new ApiResponse<>(200, Constants.SUCCESS.toString(), employeeRepository.count());
 	}
 
@@ -56,6 +64,7 @@ public class EmployeeService {
 	}
 
 	public ApiResponse<List<Employee>> searchByExample(Employee employee) {
+		log.info("Inside searchByExample():::");
 		ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase()
 				.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 
@@ -66,10 +75,12 @@ public class EmployeeService {
 	}
 
 	public Page<Employee> getEmployees(Pageable pageable) {
+		log.info("Inside getEmployees():::");
 		return employeeRepository.findAll(pageable);
 	}
 
 	public ApiResponse<List<EmployeeProjectDTO>> employeeDtoList() {
+		log.info("Inside employeeDtoList():::");
 		return new ApiResponse<>(200, Constants.SUCCESS.toString(), employeeRepository.findEmployeeProjectDetails());
 	}
 
