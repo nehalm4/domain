@@ -8,6 +8,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,17 +28,18 @@ import com.domain.repository.UserRepository;
  * @apiNote Auto Load Utility class to load the data on application start
  */
 @Component
+@EnableAsync
 public class AutoLoadUtility {
 
 	private EmployeeRepository employeeRepository;
 
 	private UserRepository userRepository;
-	
+
 	@Autowired
-    public AutoLoadUtility(EmployeeRepository employeeRepository, UserRepository userRepository) {
-        this.employeeRepository = employeeRepository;
-        this.userRepository = userRepository;
-    }
+	public AutoLoadUtility(EmployeeRepository employeeRepository, UserRepository userRepository) {
+		this.employeeRepository = employeeRepository;
+		this.userRepository = userRepository;
+	}
 
 	private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -112,12 +114,14 @@ public class AutoLoadUtility {
 
 	@Bean(name = "processExecutor")
 	public TaskExecutor workExecutor() {
+		int cores = Runtime.getRuntime().availableProcessors();
 		ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
 		threadPoolTaskExecutor.setThreadNamePrefix("Async-");
-		threadPoolTaskExecutor.setCorePoolSize(8);
-		threadPoolTaskExecutor.setMaxPoolSize(32);
+		threadPoolTaskExecutor.setCorePoolSize(20);
+		threadPoolTaskExecutor.setMaxPoolSize(40);
 		threadPoolTaskExecutor.setQueueCapacity(500);
 		threadPoolTaskExecutor.afterPropertiesSet();
+		 System.out.println("ThreadPool initialized with core pool size: " + threadPoolTaskExecutor.getCorePoolSize());
 		return threadPoolTaskExecutor;
 	}
 

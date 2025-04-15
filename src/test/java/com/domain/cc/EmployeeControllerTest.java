@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,10 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 
 import com.domain.controller.EmployeeController;
 import com.domain.dto.EmployeeProjectDTO;
@@ -156,28 +151,28 @@ public class EmployeeControllerTest {
 				.andExpect(jsonPath("$.status").value(200)).andExpect(jsonPath("$.data[0].employeeName").value("John"));
 	}
 
-	@Test
-	@Disabled
-	void testGetEmployeesPagable() throws Exception {
-		// Prepare mock data for paginated response
-		Employee employee1 = new Employee(1, "John", true, null, null, null);
-		Employee employee2 = new Employee(2, "Jane", false, null, null, null);
-		Page<Employee> mockPage = new PageImpl<>(List.of(employee1, employee2));
-
-		// Mock the service layer to return the mock page
-		when(employeeService.getEmployees(any(Pageable.class))).thenReturn(mockPage);
-
-		// Perform GET request to the endpoint
-		mockMvc.perform(get("/domain/employeeListPagable").param("page", "0") // Specify page number
-				.param("size", "2") // Specify page size
-				.param("sort", "employeeName,asc")) // Specify sort criteria
-				.andExpect(status().isOk()) // Verify HTTP 200 response
-				.andExpect(jsonPath("$.content[0].employeeId").value(1)) // Verify first employee's ID
-				.andExpect(jsonPath("$.content[0].employeeName").value("John")) // Verify first employee's name
-				.andExpect(jsonPath("$.content[1].employeeId").value(2)) // Verify second employee's ID
-				.andExpect(jsonPath("$.content[1].employeeName").value("Jane")) // Verify second employee's name
-				.andExpect(jsonPath("$.totalElements").value(2)) // Verify total number of elements
-				.andExpect(jsonPath("$.totalPages").value(1)); // Verify total number of pages
-	}
+//	@Test
+//	@Disabled
+//	void testGetEmployeesPagable() throws Exception {
+//		// Prepare mock data for paginated response
+//		Employee employee1 = new Employee(1, "John", true, null, null, null);
+//		Employee employee2 = new Employee(2, "Jane", false, null, null, null);
+//		Page<Employee> mockPage = new PageImpl<>(List.of(employee1, employee2));
+//
+//		// Mock the service layer to return the mock page
+//		when(employeeService.getEmployees(any(Pageable.class))).thenReturn(mockPage);
+//
+//		// Perform GET request to the endpoint
+//		mockMvc.perform(get("/domain/employeeListPagable").param("page", "0") // Specify page number
+//				.param("size", "2") // Specify page size
+//				.param("sort", "employeeName,asc")) // Specify sort criteria
+//				.andExpect(status().isOk()) // Verify HTTP 200 response
+//				.andExpect(jsonPath("$.content[0].employeeId").value(1)) // Verify first employee's ID
+//				.andExpect(jsonPath("$.content[0].employeeName").value("John")) // Verify first employee's name
+//				.andExpect(jsonPath("$.content[1].employeeId").value(2)) // Verify second employee's ID
+//				.andExpect(jsonPath("$.content[1].employeeName").value("Jane")) // Verify second employee's name
+//				.andExpect(jsonPath("$.totalElements").value(2)) // Verify total number of elements
+//				.andExpect(jsonPath("$.totalPages").value(1)); // Verify total number of pages
+//	}
 
 }

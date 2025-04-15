@@ -18,12 +18,12 @@ import com.domain.service.CustomUserDetailsService;
  * @author Nehal Mahajan
  * @apiNote Authentication Controller
  */
-@RequestMapping("/auth")
 @RestController
+@RequestMapping("/auth")
 public class AuthenticationController {
 
-	private CustomUserDetailsService detailsService;
-	
+	private final CustomUserDetailsService detailsService;
+
 	private static final Logger log = LoggerFactory.getLogger(AuthenticationController.class);
 
 	@Autowired
@@ -31,17 +31,21 @@ public class AuthenticationController {
 		this.detailsService = detailsService;
 	}
 
-	@PostMapping("/addUser")
-	public ResponseEntity<ApiResponse<String>> addUser(@RequestBody SignUp signUp) {
-		log.info("Inside addUser():::");
+	/**
+	 * Register a new user
+	 */
+	@PostMapping("/users")
+	public ResponseEntity<ApiResponse<String>> registerUser(@RequestBody SignUp signUp) {
+		log.info("Inside registerUser() :::");
 		return ResponseEntity.ok(detailsService.saveUser(signUp));
 	}
 
-	@PostMapping("/token")
-	public ResponseEntity<String> authenticate(@RequestBody LoginUserDto loginUserDto) {
-		log.info("Inside authenticate():::");
+	/**
+	 * Authenticate existing user and return token
+	 */
+	@PostMapping("/login")
+	public ResponseEntity<String> login(@RequestBody LoginUserDto loginUserDto) {
+		log.info("Inside login() :::");
 		return ResponseEntity.ok(detailsService.authenticateUser(loginUserDto));
-
 	}
-
 }

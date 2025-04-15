@@ -1,15 +1,19 @@
 package com.domain.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.xml.stream.events.Characters;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.domain.dto.EmployeeProjectDTO;
 import com.domain.pojo.ApiResponse;
@@ -23,7 +27,7 @@ import com.domain.utility.Constants;
  */
 @Service
 public class EmployeeService {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(EmployeeService.class);
 
 	private EmployeeRepository employeeRepository;
